@@ -1,0 +1,244 @@
+---
+title: "Class7: Machine Learning1"
+author: "Hanhee Jo (PID: A59017994)"
+format: pdf
+---
+
+Today we will delve into unsupervised machine learning with a initial focus on clustering and dimensionality reduction.
+
+Let's start by making up some data to cluster:
+Ther `rnorm()` function can help us here...
+
+```{r}
+hist( rnorm(3000, mean = 3) )
+
+```
+
+Let's get some data centered at (3, -3) (-3, 3)
+
+```{r}
+# Combine 30 +3 values with 30 -3 values
+x <- c( rnorm(30, mean = 3), rnorm(30, mean = -3) )
+
+# Creat the matrix
+z <- cbind(x=x, y=rev(x))
+
+```
+
+```{r}
+plot(z)
+```
+
+## K-means
+
+Now we can see how K-means clusters this data. The main function for K-means clustering in "base R" is called `kmeans()`
+
+```{r}
+km <- kmeans(z,centers=2)
+km
+```
+
+```{r}
+attributes(km)
+```
+
+
+> Q. What size is each cluster?
+
+```{r}
+km$size
+```
+
+> Q. The cluster of membership vector (i.e. the answer: cluster to which each point is allocated)
+
+```{r}
+km$cluster
+```
+
+> Q. Cluster center
+
+```{r}
+km$centers
+```
+
+> Q. Make a results figure, i.e. plot the data `z` colored by cluster membership and show the cluster centers.
+
+```{r}
+plot(z, col = "blue")
+```
+
+```{r}
+plot(z, col = c("red", "blue"))
+```
+
+You can specify color based on a number, where 1 is black, 2 is red.
+
+```{r}
+plot(z, col = km$cluster)
+points(km$centers, col = "blue", pch=15)
+```
+
+> Q. Re-run your K-means clustering and as for 4 clusters and plot the results as above.
+
+```{r}
+km_4 <- kmeans(z,centers=4)
+km_4
+plot(z, col = km_4$cluster)
+points(km_4$centers, col = "blue", pch = 15)
+```
+
+
+## Hierarchical Clustering
+
+The main "base R" finction for this is `hclust()`. Unlike `kmeans()` you can't just give your dataset as input, you need to provide a distance matrix.
+
+We can use `dist()` function for this
+
+```{r}
+d <- dist(z)
+# hclust()
+```
+
+
+```{r}
+dim(z)
+```
+
+```{r}
+hc <- hclust(d)
+hc
+```
+
+There is a custom plot() for hclust objects, let's see it.
+
+```{r}
+plot(hc)
+abline(h=8, col="red")
+```
+
+The function to extract clusters/grps from a hclust object/tree is called `cutree()`:
+
+```{r}
+grps <- cutree(hc, h=8)
+grps
+```
+
+
+> Q. Plot data with hclust clusters:
+
+```{r}
+plot(z, col=grps)
+```
+
+## Principal Component Analysis (PCA)
+
+The main function for PCA in base R for PCA is called `prcomp()` There are many add on packages with PCA functions tailored to particular data types (RNAseq, protein structures, metagenomics, etc.)
+
+## PCA of UK food data
+
+Read the data into R, it is a CSV file and we can use `read.csv()` to read it:
+
+```{r}
+url <- "https://tinyurl.com/UK-foods"
+x <- read.csv(url)
+x
+```
+I would like the food names as row names not their own colum of data (first colum currently). I can fix this like so:
+
+```{r}
+rownames(x) <- x[,1]
+y <- x[,-1]
+y
+```
+
+A better way to do this is to do it at the time of data import with `read.csv()`
+
+```{r}
+food <- read.csv(url, row.names = 1)
+food
+```
+
+Let's make some plots and dig into the data a little.
+
+```{r}
+rainbow(nrow(food))
+```
+
+```{r}
+barplot(as.matrix(food), beside=T, col=rainbow(nrow(food)))
+```
+
+```{r}
+barplot(as.matrix(t(food)), beside=T)
+```
+
+How about a so-called "pairs" plot where we plot each country against all other contries.
+
+```{r}
+pairs(food, col=rainbow(nrow(food)), pch=16)
+```
+
+Really there has to be a better way...
+
+## PCA to the rescue!
+
+We can run a Principal Component Analysis (PCA) for this data with the `prcomp()` function.
+
+```{r}
+head(food)
+```
+
+We need to take the transpose of this data to get the foods in the columns and the countries in the rows.
+
+```{r}
+pca <- prcomp( t(food) )
+summary(pca)
+```
+
+What is in my `pca` result object?
+
+```{r}
+attributes(pca)
+```
+
+
+```{r}
+pca$x
+```
+
+
+To make my main result figure, sometimes called a PC plot (or score plot, oridenation plot, or PC1 vs PC2 plot, etc.)
+
+```{r}
+plot(pca$x[,1], pca$x[,2], xlab = "PC1", ylab = "PC2", col = c("orange", "red", "blue", "darkgreen"), pch = 16)
+```
+
+
+```{r}
+library(ggplot2)
+
+data <- as.data.frame(pca$x)
+
+ggplot(data, aes(PC1, PC2)) +
+  geom_point()
+```
+
+To see the contributions of the original variables (foods) to these new PCs we can look at the `pca$rotation` component of our results object.
+
+```{r}
+loadings <- as.data.frame(pca$rotation)
+name <-  rownames(loadings)
+
+ggplot(loadings) + 
+ aes(PC1, name) +
+ geom_col()
+```
+
+And PC2
+
+```{r}
+ggplot(loadings) + 
+ aes(PC2, name) +
+ geom_col()
+```
+

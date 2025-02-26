@@ -1,0 +1,58 @@
+---
+title: "Class7 machine learning"
+author: "Hanhee Jo"
+format: pdf
+---
+
+# Clustering with kmeans() and hclust()
+
+We will begin by making up some data to cluster.
+
+```{r}
+tmp <- c(rnorm(30, 3), rnorm(30, -3))
+x <- cbind(x = tmp, y = rev(tmp))
+plot(x)
+
+```
+
+## Run kmeans()
+
+```{r}
+k <- kmeans(x, centers = 2, nstart = 20)
+k
+```
+
+> Q. What size is each cluster?
+
+```{r}
+k$size
+```
+
+> Q. Cluster centers
+
+```{r}
+k$centers
+```
+
+> Q. Membership vector
+
+```{r}
+k$cluster
+```
+
+Plot our data with the clustering result
+
+```{r}
+plot(x, col = k$cluster)
+points(k$centers, col = "blue", pch = 15, cex = 1.5)
+```
+
+
+## hclust()
+Hierchical Clustering
+
+```{r}
+hc <- hclust( dist(x) )
+hc
+```
+
