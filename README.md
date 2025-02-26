@@ -7,4 +7,4 @@ Winter 2025 class content:
 
 - Class 05 Data visualization with ggplot2
 
-- Class 06 [R functions]()
+- Class 06 [R functions](https://github.com/hanhee-jo/bggn213_github/blob/d7317177727c0b7f35ab80b18b330d3c8636cf9d/Class6/R%20Lab/Class6/Class6_R_functions.qmd)
