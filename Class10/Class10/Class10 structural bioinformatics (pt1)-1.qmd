@@ -1,0 +1,9 @@
+---
+title: "Class10"
+format: html
+---
+
+```{r}
+read.csv("Data Export Summary.csv")
+```
+

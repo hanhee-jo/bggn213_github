@@ -1,0 +1,288 @@
+---
+title: "Class14: RNAseq mini project"
+author: Hanhee Jo (PID# 59017994)
+format: pdf
+toc: true
+---
+
+# Background
+
+The data for for hands-on session comes from GEO entry: GSE37704, which is associated with the following publication:
+
+> Trapnell C, Hendrickson DG, Sauvageau M, Goff L et al. "Differential analysis of gene regulation at transcript resolution with RNA-seq". Nat Biotechnol 2013 Jan;31(1):46-53. PMID: 23222703
+
+The authors report on differential analysis of lung fibroblasts in response to loss of the developmental transcription factor HOXA1. 
+
+# Data Import
+
+Reading in the counts and the metadata 
+
+```{r}
+counts <- read.csv("GSE37704_featurecounts.csv", row.names = 1)
+metadata <- read.csv("GSE37704_metadata.csv")
+```
+
+```{r}
+head(counts)
+```
+
+```{r}
+metadata
+```
+
+## Tidy and verify data
+
+> Q. How many genes are in this dataset?
+
+```{r}
+nrow(counts)
+```
+
+
+> Q. How many control and knockdown experiments are there?
+
+```{r}
+table (metadata$condition)
+```
+
+
+> Q. Does the `metadata` match to the `countdata`
+
+```{r}
+all (colnames(counts) == metadata$id)
+```
+
+
+```{r}
+colnames(counts)
+```
+
+```{r}
+metadata$id
+```
+###Fix countdata to match the coldata/metadata
+
+```{r}
+newcounts <- counts[, -1]
+dim(newcounts)
+```
+
+```{r}
+all (colnames(newcounts) == metadata$id)
+```
+
+## Remove zero count genes
+
+```{r}
+to.keep <- rowSums(newcounts) != 0
+countData <- newcounts[to.keep, ]
+head(countData)
+```
+
+# PCA quality control
+
+We can use `prcomp()` function.
+
+```{r}
+pc <- prcomp( t(countData), scale = T)
+summary(pc)
+```
+
+```{r}
+metadata$condition
+mycols <- c( rep("blue", 3), rep("red", 3) )
+```
+
+Color by "control" (blue) or "kd" (red)
+
+```{r}
+library(ggplot2)
+
+ggplot(pc$x) +
+  aes(PC1, PC2) +
+  geom_point(col = mycols)
+```
+
+> Q. How many genes do we have left after filtering?
+
+```{r}
+nrow(countData)
+```
+
+
+# DESeq analysis
+
+```{r}
+#| message: false
+library(DESeq2)
+```
+
+
+## Setup the DESeq input object
+
+```{r}
+dds <- DESeqDataSetFromMatrix(countData = countData,
+                              colData = metadata,
+                              design = ~condition)
+```
+
+
+## Run DESeq
+
+```{r}
+dds <- DESeq(dds)
+```
+
+## Extract results
+
+```{r}
+res <- results(dds)
+```
+
+```{r}
+head(res)
+```
+
+
+# Volcano plot
+
+```{r}
+mycols <- rep("gray", nrow(res))
+mycols[ abs(res$log2FoldChange) > 2 ]  <- "blue" 
+mycols[ res$padj > 0.005] <- "gray"
+```
+
+
+```{r}
+ggplot(res) +
+  aes(log2FoldChange, -log(padj)) +
+  geom_point(col=mycols) +
+  geom_vline(xintercept = c(-2, 2), col="red") +
+  geom_hline(yintercept = -log(0.005), col="red")
+```
+
+
+# Add gene annotation
+
+We want to add gene SYMBOL and ENTREZID values to our results object.
+
+```{r}
+library("AnnotationDbi")
+library("org.Hs.eg.db")
+```
+
+```{r}
+columns(org.Hs.eg.db)
+```
+
+
+```{r}
+res$symbol <- mapIds(org.Hs.eg.db,
+                     keys=rownames(res), # Our genenames
+                     keytype="ENSEMBL",   # The format of our genenames
+                     column="SYMBOL",     # The new format we want to add
+                     multiVals="first")
+
+res$entrez<- mapIds(org.Hs.eg.db,
+                     keys=rownames(res), 
+                     keytype="ENSEMBL",  
+                     column="ENTREZID", # The new format we want     
+                     multiVals="first")
+
+head(res)
+```
+
+# Save results
+
+```{r}
+write.csv(res, file="myresults.csv")
+```
+
+# Pathway analysis
+
+```{r}
+#| message: false
+library(gage)
+library(gageData)
+library(pathview)
+```
+
+
+## KEGG
+
+```{r}
+data(kegg.sets.hs)
+```
+
+```{r}
+head(kegg.sets.hs, 1)
+```
+
+Make an input vector for `gage()` called `foldchanges` that has `names()` attribute set to ENTREZIDs
+
+```{r}
+foldchanges <- res$log2FoldChange
+names(foldchanges) <- res$entrez
+```
+
+```{r}
+keggres <- gage(foldchanges, gsets = kegg.sets.hs)
+```
+
+```{r}
+attributes(keggres)
+```
+
+```{r}
+head(keggres$less, 2)
+```
+
+```{r}
+pathview(gene.data=foldchanges, pathway.id="hsa04110")
+```
+
+![Cell cycle is affected](hsa04110.pathview.png)
+
+```{r}
+pathview(gene.data=foldchanges, pathway.id="hsa03030")
+```
+
+![](hsa03030.pathview.png)
+
+
+## Gene Ontology (GO)
+
+```{r}
+data(go.sets.hs)
+data(go.subs.hs)
+
+# Focus just on GO Biological Process (BP)
+
+gobpsets = go.sets.hs[go.subs.hs$BP]
+
+gobpres = gage(foldchanges, gsets=gobpsets)
+```
+
+
+```{r}
+head(gobpres$less)
+```
+
+
+## Reactome
+
+We can use reatome via R or via their fancy new website interface. The web interface wants a set of ENTREZ ID values for your genes of interest. Let's generate that.
+
+```{r}
+inds <- abs(res$log2FoldChange) >= 2 & res$padj <=0.05
+top.genes <- res$entrez[inds]
+```
+
+```{r}
+write.table(top.genes, file="top_genes.txt", row.names=FALSE, col.names=FALSE, quote=FALSE)
+```
+
+
+
+
+

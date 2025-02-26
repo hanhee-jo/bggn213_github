@@ -1,0 +1,26 @@
+---
+title: "Class10 structural bioinformatics (pt1)"
+author: "Hanhee Jo (PID# A59017994)"
+format: html
+toc: true
+---
+# The PDB satabase
+
+The main repository for biomolecular data is called the PDB (Protein Data Bank) and can be found at: https://www.rcsb.org/
+
+Let's see what it contains in terms of type of molecule and method of structure determination (Analyze > PDB stats > By Mol Type and Method)
+
+```{r}
+pdb <- read.csv("Data_Export_Summary.csv")
+```
+
+
+> Q1: What percentage of structures in the PDB are solved by X-Ray and Electron Microscopy.
+
+```{r}
+
+```
+
+
+
+> Q2: What proportion of structures in the PDB are protein?
