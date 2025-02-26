@@ -13,7 +13,7 @@ Winter 2025 class content:
 
 - Class 08 [Introduction to machine learning for Bioinformatics 1](https://github.com/hanhee-jo/bggn213_github/blob/ffc66549b8228ca6a27dd7f846a578e4576e91fc/Class8/R%20lab/Class8/Class8-Mini%20project.qmd)
 
-- Class 09 [Unsupervised learning mini-project](https://github.com/hanhee-jo/bggn213_github/blob/ffc66549b8228ca6a27dd7f846a578e4576e91fc/Class9/Class9-Halloween%20candy%20mini%20project/Class9-halloween%20candy%20project.qmd)
+- Class 09 [Halloween candy mini-project](https://github.com/hanhee-jo/bggn213_github/blob/ffc66549b8228ca6a27dd7f846a578e4576e91fc/Class9/Class9-Halloween%20candy%20mini%20project/Class9-halloween%20candy%20project.qmd)
 
 - Class 10 [Find-a-gene project](https://github.com/hanhee-jo/bggn213_github/blob/ffc66549b8228ca6a27dd7f846a578e4576e91fc/Class10/Class10/Calss10-Comparative%20structure%20analysis.qmd)
 
