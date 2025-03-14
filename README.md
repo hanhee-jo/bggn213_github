@@ -3,7 +3,7 @@ My classwork from [BGGN213](https://bioboot.github.io/bggn213_W25/) W25 at UC Sa
 
 Winter 2025 class content:
 
-- Class **04** [Intro to R](https://github.com/hanhee-jo/bggn213_github/blob/ffc66549b8228ca6a27dd7f846a578e4576e91fc/Class4/Rlab_class4/Class4/HW-Class4.R)
+- Class **04** [Intro to R](/Class4/Rlab_class4/Class4/HW-Class4.R)
 
 - Class **05** [Data visualization with ggplot2](/Class5/RLab/Class5/class5_Data_Viz_with_ggplot.html)
 
@@ -24,3 +24,16 @@ Winter 2025 class content:
 - Class **13** [Transcriptomics, RNA-Seq analysis, and the interpretation of gene lists](https://github.com/hanhee-jo/bggn213_github/blob/ffc66549b8228ca6a27dd7f846a578e4576e91fc/Class13/Class13/Class13.qmd)
 
 - Class **14** [RNA-Seq mini project](https://github.com/hanhee-jo/bggn213_github/blob/ffc66549b8228ca6a27dd7f846a578e4576e91fc/Class14/Class%2014/Class14-RNAseq%20mini%20project.qmd)
+
+- Class **15** [Git and Github]()
+
+- Class **16** [Essential UNIX for bioinformatics]()
+
+- Class **17** [Analyzing sequence data in cloud (AWS)]()
+
+- Class **18** [Pertussis resurgence project]()
+
+- Class **19** [Cancer mutation analysis mini project]()
+
+- Class **20** [Portfolio building]()
+
