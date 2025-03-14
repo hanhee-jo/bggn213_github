@@ -3,7 +3,7 @@ My classwork from [BGGN213](https://bioboot.github.io/bggn213_W25/) W25 at UC Sa
 
 Winter 2025 class content:
 
-- Class **04** [Intro to R](/Class4/Rlab_class4/Class4/HW-Class4.R)
+- Class **04** [Intro to R](/Class4/class04.pdf)
 
 - Class **05** [Data visualization with ggplot2](/Class5/RLab/Class5/class5_Data_Viz_with_ggplot.html)
 
