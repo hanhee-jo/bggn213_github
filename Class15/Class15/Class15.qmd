@@ -1,0 +1,13 @@
+---
+title: "Class15:github"
+author: Hanhee Jo (PID# A59017994)
+format: html
+toc: true
+---
+
+# First tell Fit who you are
+git config --global user.name "Hanhee Jo"
+git config --global user.email "hajo@ucsd.edu"
+
+
+

@@ -1,0 +1,30 @@
+This is just a basic text editor:
+
+pwd: Print Working Directory (where are we)
+ls: List (list out files and dirs in a given location)
+cd: Change Directory
+mkdir: Make Directory (make a new folder)
+nano: simple text editor that it available anywhere
+PATH: The location of a file or folder from the root of the file system
+less: pager to see text file
+head: view top of file
+tail: view bottom of file
+
+ssh: open a schell on a remote computer
+
+Instance ID
+
+i-066ea9fef6397f8ac (bggn213_hanhee)
+Open an SSH client.
+Locate your private key file. The key used to launch this instance is bggn213_hjo.pem
+Run this command, if necessary, to ensure your key is not publicly viewable.
+chmod 400 "bggn213_hjo.pem"
+Connect to your instance using its Public DNS:
+ec2-35-161-161-177.us-west-2.compute.amazonaws.com
+Example:
+ssh -i "bggn213_hjo.pem" ubuntu@ec2-35-161-161-177.us-west-2.compute.amazonaws.com
+
+Export the file
+
+scp -i keyfile username@remote.machine.com:~/work/my_results.txt
+scp -i bggn213_hjo.pem ubuntu@ec2-35-161-161-177.us-west-2.compute.amazonaws.com:~/Desktop/class16/my_results.txt

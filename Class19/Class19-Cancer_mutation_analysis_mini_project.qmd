@@ -1,0 +1,78 @@
+---
+title: "Class19"
+author: "Hanhee Jo, PID# A59017994"
+format: html
+toc: true
+---
+
+# Cancer mutation analysis mini project
+
+> Q2. [6pts] What are the tumor specific mutations in this particular case ( e.g. A130V)?
+
+```{r}
+library(Biostrings)
+library(bio3d)
+
+#read fasta file
+seq <- read.fasta("A59017994_mutant_seq.fa")
+```
+
+```{r}
+attributes(seq)
+```
+
+```{r}
+seq$id
+```
+
+```{r}
+df <- data.frame(seq$id, seq$ali)
+df
+```
+
+
+```{r}
+score <- conserv(seq)
+inds <- score!=1
+positions <- which(inds)
+positions
+```
+
+```{r}
+seq$ali[1, positions]
+positions
+seq$ali[2, positions]
+```
+
+
+
+## Trimmed version
+
+```{r}
+infile <- "https://bioboot.github.io/bggn213_W25/class-material/lab19_sequences/A69038031_mutant_seq.fa"
+seq <- read.fasta(infile)
+
+score <- conserv(seq)
+inds <- score!=1
+positions <- which(inds)
+
+paste(seq$ali[1, positions], 
+      positions, 
+      seq$ali[2, positions], sep="")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
