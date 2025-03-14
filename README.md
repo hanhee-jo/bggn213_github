@@ -5,7 +5,7 @@ Winter 2025 class content:
 
 - Class **04** [Intro to R](https://github.com/hanhee-jo/bggn213_github/blob/ffc66549b8228ca6a27dd7f846a578e4576e91fc/Class4/Rlab_class4/Class4/HW-Class4.R)
 
-- Class **05** [Data visualization with ggplot2](/Class5/RLab/Class5/class5_Data Viz with ggplot.html)
+- Class **05** [Data visualization with ggplot2](/Class5/RLab/Class5/class5_Data_Viz_with_ggplot.html)
 
 - Class **06** [R functions](https://github.com/hanhee-jo/bggn213_github/blob/d7317177727c0b7f35ab80b18b330d3c8636cf9d/Class6/R%20Lab/Class6/Class6_R_functions.qmd)
 
